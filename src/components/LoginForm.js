@@ -85,9 +85,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#c2bad8',
     padding: 9,
     width: '100%',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
   },
   btnText: {
     color: 'darkslateblue',
