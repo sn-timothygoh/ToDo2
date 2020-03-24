@@ -5,6 +5,7 @@ import {
   IMPORTANT_TODO,
   SEARCH_TODO,
   EDIT_TODO,
+  LOGIN,
 } from '../constants';
 
 export const addTodo = (title, description, start, end) => ({
@@ -42,4 +43,11 @@ export const importantTodo = id => ({
 export const searchTodo = search => ({
   type: SEARCH_TODO,
   search,
+});
+
+export const login = (trueFalse, name, password) => ({
+  type: LOGIN,
+  trueFalse,
+  name,
+  password,
 });

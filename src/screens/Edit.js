@@ -6,6 +6,7 @@ class Edit extends Component {
   render() {
     return (
       <View style={{flex: 1}}>
+        <StatusBar hidden={true} />
         <EditTodo navigation={this.props.navigation} route={this.props.route} />
       </View>
     );

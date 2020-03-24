@@ -6,7 +6,8 @@ class Item extends Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <AddTodo />
+        <StatusBar hidden={true} />
+        <AddTodo navigation={this.props.navigation} />
       </View>
     );
   }

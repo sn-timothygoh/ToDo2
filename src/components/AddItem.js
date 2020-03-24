@@ -10,7 +10,7 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 
-const AddTodo = ({addTodo}) => {
+const AddTodo = ({addTodo, navigation}) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
@@ -50,6 +50,12 @@ const AddTodo = ({addTodo}) => {
       moment(start).format('DD-MM-YYYY'),
       moment(end).format('DD-MM-YYYY'),
     );
+
+    navigation.navigate('Home');
+    setTitle('');
+    setDescription('');
+    setEndDate(new Date());
+    setStartDate(new Date());
   };
 
   return (

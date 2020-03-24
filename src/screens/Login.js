@@ -6,7 +6,8 @@ class Login extends Component {
   render() {
     return (
       <View>
-        <LoginForm />
+        <StatusBar hidden={true} />
+        <LoginForm navigation={this.props.navigation} />
       </View>
     );
   }
