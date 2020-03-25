@@ -6,15 +6,18 @@ import {
   SEARCH_TODO,
   EDIT_TODO,
   LOGIN,
+  NEW_LOGIN,
+  SET_USER_ID,
 } from '../constants';
 
-export const addTodo = (title, description, start, end) => ({
+export const addTodo = (title, description, start, end, userId) => ({
   type: ADD_TODO,
   id: Math.random(),
   title,
   description,
   start,
   end,
+  userId,
 });
 
 export const editTodo = (id, title, description, start, end) => ({
@@ -45,9 +48,23 @@ export const searchTodo = search => ({
   search,
 });
 
-export const login = (trueFalse, name, password) => ({
+// export const newLogin = (trueFalse, name, password) => ({
+//   type: NEW_LOGIN,
+//   userId: Math.random(),
+//   trueFalse,
+//   name,
+//   password,
+// });
+
+export const login = (userId, name, password) => ({
   type: LOGIN,
-  trueFalse,
+  userId,
   name,
   password,
+});
+
+export const session = (userId, trueFalse) => ({
+  type: SET_USER_ID,
+  userId,
+  trueFalse,
 });

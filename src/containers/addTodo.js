@@ -4,11 +4,12 @@ import {addTodo} from '../action/index';
 
 const mapStateToProps = state => ({
   todos: state.todos,
+  sessions: state.sessions,
 });
 
 const mapDispatchToProps = dispatch => ({
-  addTodo: (title, description, start, end) =>
-    dispatch(addTodo(title, description, start, end)),
+  addTodo: (title, description, start, end, userId) =>
+    dispatch(addTodo(title, description, start, end, userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddItem);

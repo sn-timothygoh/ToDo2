@@ -10,7 +10,7 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 
-const AddTodo = ({addTodo, navigation}) => {
+const AddTodo = ({addTodo, navigation, sessions}) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
@@ -49,6 +49,7 @@ const AddTodo = ({addTodo, navigation}) => {
       description,
       moment(start).format('DD-MM-YYYY'),
       moment(end).format('DD-MM-YYYY'),
+      sessions.userId,
     );
 
     navigation.navigate('Home');

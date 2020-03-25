@@ -6,22 +6,26 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
+  Alert,
 } from 'react-native';
 
-const LoginForm = ({logins, navigation, login}) => {
+import {useNavigation} from '@react-navigation/native';
+
+const LoginForm = ({logins, sessions, session, login}) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [load, setLoad] = useState(true);
   const ref_input = useRef();
+  const navigation = useNavigation();
 
-  useEffect(() => {
-    if (load) {
-      if (logins.loggedIn === true) {
-        navigation.navigate('Home');
-      }
-      setLoad(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (load) {
+  //     if (session.loggedIn === true) {
+  //       navigation.navigate('Home');
+  //       setLoad(false);
+  //     }
+  //   }
+  // }, []);
 
   const checkEmpty = (name, password) => {
     if (name === '') {
@@ -29,14 +33,24 @@ const LoginForm = ({logins, navigation, login}) => {
     } else if (password === '') {
       return alert('Password field must not be empty');
     } else {
-      if (name === logins.name || password === logins.password) {
-        login(true, name, password);
+      const found = logins.find(element => element.name === name);
+      if (found === undefined) {
+        const userId = Math.random();
+        login(userId, name, password);
+        session(userId, true);
         Keyboard.dismiss();
-        navigation.navigate('Home');
         setName('');
         setPassword('');
+        console.log('new');
       } else {
-        alert('Name or Password is incorrect');
+        if (found.name === name && found.password === password) {
+          session(found.userId, true);
+          Keyboard.dismiss();
+          setName('');
+          setPassword('');
+        } else {
+          Alert('Incorrect Password');
+        }
       }
     }
   };

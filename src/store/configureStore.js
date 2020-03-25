@@ -8,7 +8,7 @@ import rootReducer from '../reducers';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['todos', 'search', 'logins'],
+  whitelist: ['todos', 'search', 'logins', 'sessions'],
 };
 
 const middleware = [];
@@ -17,5 +17,4 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = createStore(persistedReducer);
 
 let persistor = persistStore(store);
-
 export {store, persistor};

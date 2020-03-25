@@ -19,6 +19,7 @@ const todos = (state = [], action) => {
           end: action.end,
           completed: false,
           isImportant: false,
+          userId: action.userId,
         },
       ];
 

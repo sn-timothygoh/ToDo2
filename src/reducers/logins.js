@@ -1,21 +1,16 @@
 import {LOGIN} from '../constants';
 
-const initialState = {
-  loggedIn: false,
-  name: 'abc',
-  password: 123,
-};
-
-const logins = (state = initialState, action) => {
+const logins = (state = [], action) => {
   switch (action.type) {
     case LOGIN:
-      return {
+      return [
         ...state,
-        loggedIn: action.trueFalse,
-        name: action.name,
-        password: action.password,
-      };
-
+        {
+          userId: action.userId,
+          name: action.name,
+          password: action.password,
+        },
+      ];
     default:
       return state;
   }

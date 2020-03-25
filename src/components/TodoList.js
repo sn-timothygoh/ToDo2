@@ -11,12 +11,12 @@ import ListItem from './ListItem';
 import _ from 'lodash';
 const TodoList = ({
   todos,
-  logins,
   toggleTodo,
   deleteTodo,
   importantTodo,
   navigation,
-  login,
+  sessions,
+  session,
 }) => {
   const sortTodo = _.orderBy(
     todos,
@@ -24,9 +24,8 @@ const TodoList = ({
     ['asc', 'desc'],
   );
 
-  const logout = (name, password) => {
-    login(false, name, password);
-    navigation.navigate('Login');
+  const logout = () => {
+    session(sessions.userId, false);
   };
 
   return (
@@ -46,9 +45,7 @@ const TodoList = ({
       />
 
       <View>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => logout(logins.name, logins.password)}>
+        <TouchableOpacity style={styles.btn} onPress={() => logout()}>
           <Text style={styles.btnText}>Logout</Text>
         </TouchableOpacity>
       </View>

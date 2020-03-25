@@ -8,10 +8,12 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
-const Header = ({todos, navigation}) => {
+const Header = ({todos, navigation, sessions}) => {
   const countTotal = todos => {
     if (todos.length > 0) {
-      return todos.filter(todo => todo.completed === false).length;
+      return todos.filter(
+        todo => todo.completed === false && todo.userId === sessions.userId,
+      ).length;
     }
     return 0;
   };

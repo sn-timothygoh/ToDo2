@@ -6,3 +6,5 @@ export const IMPORTANT_TODO = 'IMPORTANT_TODO';
 export const SEARCH_TODO = 'SEARCH_TODO';
 export const EDIT_TODO = 'EDIT_TODO';
 export const LOGIN = 'LOGIN';
+export const NEW_LOGIN = 'NEW_LOGIN';
+export const SET_USER_ID = 'SET_USER_ID';
