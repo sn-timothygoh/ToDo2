@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Button,
-  FlatList,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import ListItem from './ListItem';
 import _ from 'lodash';
 const TodoList = ({
@@ -24,16 +17,13 @@ const TodoList = ({
     ['asc', 'desc'],
   );
 
-  const logout = () => {
-    session(sessions.userId, false);
-  };
-
   return (
     <View style={{flex: 1}}>
       <FlatList
         data={sortTodo}
         renderItem={({item}) => (
           <ListItem
+            key={item.id}
             importantTodo={importantTodo}
             deleteTodo={deleteTodo}
             toggleTodo={toggleTodo}
@@ -45,7 +35,9 @@ const TodoList = ({
       />
 
       <View>
-        <TouchableOpacity style={styles.btn} onPress={() => logout()}>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => session(sessions.userId, false)}>
           <Text style={styles.btnText}>Logout</Text>
         </TouchableOpacity>
       </View>

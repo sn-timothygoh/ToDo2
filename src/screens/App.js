@@ -1,20 +1,17 @@
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, StatusBar} from 'react-native';
-//import AddTodo from '../containers/addTodo';
+import React from 'react';
+import {View, StatusBar} from 'react-native';
 import VisibleTodos from '../containers/VisibleTodos';
 import Header from '../containers/headerCount';
 import Search from '../containers/searchTodo';
-class App extends Component {
-  render() {
-    return (
-      <View style={{flex: 1}}>
-        <StatusBar hidden={true} />
-        <Header navigation={this.props.navigation} />
-        <Search />
-        <VisibleTodos navigation={this.props.navigation} />
-      </View>
-    );
-  }
-}
+const App = ({navigation}) => {
+  return (
+    <View style={{flex: 1}}>
+      <StatusBar hidden={true} />
+      <Header navigation={navigation} />
+      <Search />
+      <VisibleTodos navigation={navigation} />
+    </View>
+  );
+};
 
 export default App;

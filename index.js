@@ -10,32 +10,23 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {store, persistor} from './src/store/configureStore';
 import {NavigationContainer} from '@react-navigation/native';
-import SplashScreen from './src/screens/splashScreen';
+import SplashScreen from 'react-native-splash-screen';
 
 const AppContainer = () => {
-  const [screen, setScreen] = useState(false);
   useEffect(() => {
     setTimeout(() => {
-      setScreen(true);
-    }, 1000);
+      SplashScreen.hide();
+    }, 200);
   }, []);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        {bootstrapped => {
-          if (bootstrapped && screen) {
-            return (
-              <NavigationContainer>
-                <Navigation />
-              </NavigationContainer>
-            );
-          } else {
-            return <SplashScreen />;
-          }
-        }}
+        <NavigationContainer>
+          <Navigation />
+        </NavigationContainer>
       </PersistGate>
     </Provider>
   );
 };
-
 AppRegistry.registerComponent(appName, () => AppContainer);

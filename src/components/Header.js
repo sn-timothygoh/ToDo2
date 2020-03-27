@@ -1,12 +1,8 @@
-import React, {useState, useRef} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  TextInput,
-  KeyboardAvoidingView,
-} from 'react-native';
+import React from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+
+import {IconButton, Colors} from 'react-native-paper';
 
 const Header = ({todos, navigation, sessions}) => {
   const countTotal = todos => {
@@ -22,12 +18,12 @@ const Header = ({todos, navigation, sessions}) => {
     <View style={styles.header}>
       <Text style={styles.text}>Todo list</Text>
       <Text style={styles.numbertext}>{countTotal(todos)} of Task </Text>
-      <Icon
+      <IconButton
         style={styles.icon}
-        onPress={() => navigation.navigate('Item')}
-        name="plus"
-        size={30}
+        icon="plus"
         color="white"
+        size={30}
+        onPress={() => navigation.navigate('Item')}
       />
     </View>
   );
@@ -52,8 +48,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: 'absolute',
-    top: 15,
-    right: 15,
+    top: 0,
+    right: 0,
   },
   input: {
     margin: 5,

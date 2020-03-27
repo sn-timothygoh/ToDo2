@@ -128,7 +128,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.todoapp2"
+        applicationId "com.todo.chanvinsheng"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

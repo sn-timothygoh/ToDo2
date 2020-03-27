@@ -1,16 +1,14 @@
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, StatusBar} from 'react-native';
+import React from 'react';
+import {View, StatusBar} from 'react-native';
 import AddTodo from '../containers/addTodo';
 
-class Item extends Component {
-  render() {
-    return (
-      <View style={{flex: 1}}>
-        <StatusBar hidden={true} />
-        <AddTodo navigation={this.props.navigation} />
-      </View>
-    );
-  }
-}
+const Item = ({navigation}) => {
+  return (
+    <View style={{flex: 1, backgroundColor: 'white'}}>
+      <StatusBar hidden={true} />
+      <AddTodo navigation={navigation} />
+    </View>
+  );
+};
 
 export default Item;

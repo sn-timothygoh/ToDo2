@@ -3,40 +3,56 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
-  Button,
+  KeyboardAvoidingView,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import {TextInput, Button} from 'react-native-paper';
 
 const EditTodo = ({editTodo, route, navigation}) => {
   const {itemId, title, description, start, end} = route.params;
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
 
-  const newStartDate = start.split('-');
-  const newEndDate = end.split('-');
   const [startDate, setStartDate] = useState(
-    new Date(newStartDate[2], newStartDate[1], newStartDate[0]),
+    new Date(moment.unix(start).utc()),
   );
   const [startShow, setStartShow] = useState(false);
 
-  const [endDate, setEndDate] = useState(
-    new Date(newEndDate[2], newEndDate[1], newEndDate[0]),
-  );
+  const [endDate, setEndDate] = useState(new Date(moment.unix(end).utc()));
   const [endShow, setEndShow] = useState(false);
 
-  const onChangeStart = (event, selectedDate) => {
+  const onChangeStart = (e, selectedDate) => {
     const currentDate = selectedDate || startDate;
     setStartShow(Platform.OS === 'ios');
-    setStartDate(currentDate);
+    if (
+      moment(moment(currentDate).format('YYYY-MM-DD')).isSame(
+        moment(new Date()).format('YYYY-MM-DD'),
+      )
+    ) {
+      setStartDate(currentDate);
+    } else if (new Date() >= currentDate) {
+      alert('Error date');
+    } else {
+      setStartDate(currentDate);
+    }
   };
 
-  const onChangeEnd = (event, selectedDate) => {
-    const currentDate = selectedDate || startDate;
+  const onChangeEnd = (e, selectedDate) => {
+    const currentDate = selectedDate || endDate;
     setEndShow(Platform.OS === 'ios');
-    setEndDate(currentDate);
+    if (
+      moment(moment(currentDate).format('YYYY-MM-DD')).isSame(
+        moment(new Date()).format('YYYY-MM-DD'),
+      )
+    ) {
+      setEndDate(currentDate);
+    } else if (new Date() >= currentDate) {
+      alert('Error date');
+    } else {
+      setEndDate(currentDate);
+    }
   };
 
   const showStartDatePicker = () => {
@@ -47,98 +63,125 @@ const EditTodo = ({editTodo, route, navigation}) => {
     setEndShow(true);
   };
 
-  const checkEmpty = (id, title, description, start, end) => {
-    if (title == '') return alert('title input is empty');
-    editTodo(
-      id,
-      title,
-      description,
-      moment(start).format('DD-MM-YYYY'),
-      moment(end).format('DD-MM-YYYY'),
-    );
+  const checkEmpty = (id, editTitle, editdDescription, start, end) => {
+    if (start >= end) {
+      alert('End date must be greater than Start date');
+    } else {
+      if (editTitle === '' && editdDescription === '') {
+        editTodo(
+          id,
+          title,
+          description,
+          moment(start).format('X'),
+          moment(end).format('X'),
+        );
+      } else if (editdDescription === '') {
+        editTodo(
+          id,
+          editTitle,
+          description,
+          moment(start).format('X'),
+          moment(end).format('X'),
+        );
+      } else if (editTitle === '') {
+        editTodo(
+          id,
+          title,
+          editdDescription,
+          moment(start).format('X'),
+          moment(end).format('X'),
+        );
+      } else {
+        editTodo(
+          id,
+          editTitle,
+          editdDescription,
+          moment(start).format('X'),
+          moment(end).format('X'),
+        );
+      }
 
-    navigation.navigate('Home');
-    setEditTitle('');
-    setEditDescription('');
-    setEndDate(new Date());
-    setStartDate(new Date());
+      navigation.goBack();
+    }
   };
 
   const ref_input = useRef();
   return (
-    <View style={styles.container}>
-      <View style={{flexDirection: 'row', margin: 10}}>
-        <Text style={styles.inputText}>Title</Text>
+    <KeyboardAvoidingView behavior="padding">
+      <View style={{margin: 20}}>
         <TextInput
-          onChangeText={setEditTitle}
+          mode="outlined"
           value={editTitle}
           placeholder={title}
-          style={styles.input}
-          autoFocus={true}
+          onChangeText={text => setEditTitle(text)}
           returnKeyType="next"
           onSubmitEditing={() => ref_input.current.focus()}
         />
       </View>
-      <View style={{flexDirection: 'row', margin: 10}}>
-        <Text style={styles.inputText}>Description</Text>
+      <View style={{margin: 20}}>
         <TextInput
-          onChangeText={setEditDescription}
-          value={editDescription}
+          mode="outlined"
           placeholder={description}
-          style={styles.input}
+          value={editDescription}
           ref={ref_input}
+          onChangeText={setEditDescription}
         />
       </View>
 
       <View style={{flexDirection: 'row', margin: 10}}>
-        <Text style={styles.btnDate}>
+        <Button color="black" labelStyle={{fontSize: 20}} mode="text">
           {moment(startDate).format('DD-MM-YYYY')}
-        </Text>
-        <View style={[{width: '50%'}]}>
-          <Button
-            style={{}}
-            onPress={() => showStartDatePicker()}
-            title="Start Date"
-          />
+        </Button>
+
+        <View style={[{marginLeft: 20, width: '50%'}]}>
+          <Button onPress={() => showStartDatePicker()} mode="contained">
+            Start Date
+          </Button>
         </View>
       </View>
 
       <View style={{flexDirection: 'row', margin: 10}}>
-        <Text style={styles.btnDate}>
+        <Button color="black" labelStyle={{fontSize: 20}} mode="text">
           {moment(endDate).format('DD-MM-YYYY')}
-        </Text>
-        <View style={[{width: '50%'}]}>
-          <Button
-            style={{}}
-            onPress={() => showEndDatePicker()}
-            title="End Date"
-          />
+        </Button>
+        <View style={[{marginLeft: 20, width: '50%'}]}>
+          <Button onPress={() => showEndDatePicker()} mode="contained">
+            End Date
+          </Button>
         </View>
       </View>
 
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={() =>
-          checkEmpty(itemId, editTitle, editDescription, startDate, endDate)
-        }>
-        <Text style={styles.btnText}>Edit Item</Text>
-      </TouchableOpacity>
+      <View style={{margin: 20}}>
+        <Button
+          contentStyle={{height: 50}}
+          color="skyblue"
+          icon="account-edit"
+          mode="contained"
+          labelStyle={{fontSize: 20}}
+          onPress={() =>
+            checkEmpty(itemId, editTitle, editDescription, startDate, endDate)
+          }>
+          Edit Item
+        </Button>
+      </View>
 
-      {startShow && (
+      {startShow ? (
         <DateTimePicker
           value={startDate}
+          minimumDate={new Date()}
           display="default"
           onChange={onChangeStart}
         />
-      )}
-      {endShow && (
+      ) : null}
+      {endShow ? (
         <DateTimePicker
           value={endDate}
           display="default"
+          minimumDate={new Date()}
           onChange={onChangeEnd}
         />
-      )}
-    </View>
+      ) : null}
+    </KeyboardAvoidingView>
   );
 };
 export default EditTodo;

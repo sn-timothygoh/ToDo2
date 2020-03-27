@@ -1,23 +1,21 @@
 import React, {useState, useRef} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Button,
-} from 'react-native';
+import {View, StyleSheet, KeyboardAvoidingView} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import {TextInput, Button} from 'react-native-paper';
 
 const AddTodo = ({addTodo, navigation, sessions}) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const titleRef = React.useRef();
+  const descriptionRef = React.useRef();
 
   const [startDate, setStartDate] = useState(new Date());
   const [startShow, setStartShow] = useState(false);
 
-  const [endDate, setEndDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(
+    new Date(Date.now() + 3600 * 1000 * 24),
+  );
   const [endShow, setEndShow] = useState(false);
 
   const ref_input = useRef();
@@ -25,13 +23,33 @@ const AddTodo = ({addTodo, navigation, sessions}) => {
   const onChangeStart = (event, selectedDate) => {
     const currentDate = selectedDate || startDate;
     setStartShow(Platform.OS === 'ios');
-    setStartDate(currentDate);
+    if (
+      moment(moment(currentDate).format('YYYY-MM-DD')).isSame(
+        moment(new Date()).format('YYYY-MM-DD'),
+      )
+    ) {
+      setStartDate(currentDate);
+    } else if (new Date() >= currentDate) {
+      alert('Error date');
+    } else {
+      setStartDate(currentDate);
+    }
   };
 
   const onChangeEnd = (event, selectedDate) => {
-    const currentDate = selectedDate || startDate;
+    const currentDate = selectedDate || endDate;
     setEndShow(Platform.OS === 'ios');
-    setEndDate(currentDate);
+    if (
+      moment(moment(currentDate).format('YYYY-MM-DD')).isSame(
+        moment(new Date()).format('YYYY-MM-DD'),
+      )
+    ) {
+      setEndDate(currentDate);
+    } else if (new Date() >= currentDate) {
+      alert('Error date');
+    } else {
+      setEndDate(currentDate);
+    }
   };
 
   const showStartDatePicker = () => {
@@ -44,79 +62,83 @@ const AddTodo = ({addTodo, navigation, sessions}) => {
 
   const checkEmpty = (title, description, start, end) => {
     if (title == '') return alert('title input is empty');
-    addTodo(
-      title,
-      description,
-      moment(start).format('DD-MM-YYYY'),
-      moment(end).format('DD-MM-YYYY'),
-      sessions.userId,
-    );
+    if (start >= end) {
+      alert('End date must be greater than Start date');
+    } else {
+      addTodo(
+        title,
+        description,
+        moment(start).format('X'),
+        moment(end).format('X'),
+        sessions.userId,
+      );
 
-    navigation.navigate('Home');
-    setTitle('');
-    setDescription('');
-    setEndDate(new Date());
-    setStartDate(new Date());
+      navigation.goBack();
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={{flexDirection: 'row', margin: 10}}>
-        <Text style={styles.inputText}>Title</Text>
+    <KeyboardAvoidingView behavior="padding">
+      <View style={{margin: 20}}>
         <TextInput
-          onChangeText={setTitle}
+          mode="outlined"
           value={title}
-          placeholder="Item Title"
-          style={styles.input}
-          autoFocus={true}
+          placeholder="Add Todo Item"
+          onChangeText={text => setTitle(text)}
           returnKeyType="next"
           onSubmitEditing={() => ref_input.current.focus()}
         />
       </View>
-      <View style={{flexDirection: 'row', margin: 10}}>
-        <Text style={styles.inputText}>Description</Text>
+
+      <View style={{margin: 20}}>
         <TextInput
-          onChangeText={setDescription}
+          mode="outlined"
+          placeholder="Add Description"
           value={description}
-          placeholder="Item Description"
-          style={styles.input}
           ref={ref_input}
+          onChangeText={setDescription}
         />
       </View>
+
       <View style={{flexDirection: 'row', margin: 10}}>
-        <Text style={styles.btnDate}>
+        <Button color="black" labelStyle={{fontSize: 20}} mode="text">
           {moment(startDate).format('DD-MM-YYYY')}
-        </Text>
-        <View style={[{width: '50%'}]}>
-          <Button
-            style={{}}
-            onPress={() => showStartDatePicker()}
-            title="Start Date"
-          />
+        </Button>
+
+        <View style={[{marginLeft: 20, width: '50%'}]}>
+          <Button onPress={() => showStartDatePicker()} mode="contained">
+            Start Date
+          </Button>
         </View>
       </View>
 
       <View style={{flexDirection: 'row', margin: 10}}>
-        <Text style={styles.btnDate}>
+        <Button color="black" labelStyle={{fontSize: 20}} mode="text">
           {moment(endDate).format('DD-MM-YYYY')}
-        </Text>
-        <View style={[{width: '50%'}]}>
-          <Button
-            style={{}}
-            onPress={() => showEndDatePicker()}
-            title="End Date"
-          />
+        </Button>
+
+        <View style={[{marginLeft: 20, width: '50%'}]}>
+          <Button onPress={() => showEndDatePicker()} mode="contained">
+            End Date
+          </Button>
         </View>
       </View>
+      <View style={{margin: 20}}>
+        <Button
+          contentStyle={{height: 50}}
+          color="skyblue"
+          icon="plus"
+          mode="contained"
+          labelStyle={{fontSize: 20}}
+          onPress={() => checkEmpty(title, description, startDate, endDate)}>
+          Add Item
+        </Button>
+      </View>
 
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={() => checkEmpty(title, description, startDate, endDate)}>
-        <Text style={styles.btnText}>Add Item</Text>
-      </TouchableOpacity>
       {startShow && (
         <DateTimePicker
           value={startDate}
+          minimumDate={new Date()}
           display="default"
           onChange={onChangeStart}
         />
@@ -124,11 +146,12 @@ const AddTodo = ({addTodo, navigation, sessions}) => {
       {endShow && (
         <DateTimePicker
           value={endDate}
+          minimumDate={new Date()}
           display="default"
           onChange={onChangeEnd}
         />
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 export default AddTodo;

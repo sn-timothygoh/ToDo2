@@ -1,31 +1,17 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
   Keyboard,
   Alert,
+  KeyboardAvoidingView,
+  StatusBar,
 } from 'react-native';
+import {TextInput, Button} from 'react-native-paper';
 
-import {useNavigation} from '@react-navigation/native';
-
-const LoginForm = ({logins, sessions, session, login}) => {
+const LoginForm = ({logins, session, login}) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [load, setLoad] = useState(true);
   const ref_input = useRef();
-  const navigation = useNavigation();
-
-  // useEffect(() => {
-  //   if (load) {
-  //     if (session.loggedIn === true) {
-  //       navigation.navigate('Home');
-  //       setLoad(false);
-  //     }
-  //   }
-  // }, []);
 
   const checkEmpty = (name, password) => {
     if (name === '') {
@@ -41,7 +27,6 @@ const LoginForm = ({logins, sessions, session, login}) => {
         Keyboard.dismiss();
         setName('');
         setPassword('');
-        console.log('new');
       } else {
         if (found.name === name && found.password === password) {
           session(found.userId, true);
@@ -49,79 +34,66 @@ const LoginForm = ({logins, sessions, session, login}) => {
           setName('');
           setPassword('');
         } else {
-          Alert('Incorrect Password');
+          alert('Incorrect Password');
         }
       }
     }
   };
 
   return (
-    <View>
-      <View style={{flexDirection: 'row', margin: 10}}>
-        <Text style={styles.inputText}>Name</Text>
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={Platform.select({ios: 80, android: 10})}
+      style={{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}
+      enabled
+      scrollEnabled={false}>
+      <StatusBar hidden={true} />
+      <View style={{marginBottom: 10, marginRight: 20, marginLeft: 20}}>
         <TextInput
-          onChangeText={setName}
+          mode="outlined"
+          placeholder="Name"
           value={name}
-          placeholder="Name..."
-          style={styles.input}
+          onChangeText={setName}
           returnKeyType="next"
           onSubmitEditing={() => ref_input.current.focus()}
         />
       </View>
-      <View style={{flexDirection: 'row', margin: 10}}>
-        <Text style={styles.inputText}>Password</Text>
+      <View style={{marginBottom: 10, marginRight: 20, marginLeft: 20}}>
         <TextInput
-          onChangeText={setPassword}
+          mode="outlined"
+          secureTextEntry={true}
+          placeholder="Password"
           value={password}
-          placeholder="Password..."
-          style={styles.input}
+          onChangeText={setPassword}
           ref={ref_input}
         />
       </View>
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={() => checkEmpty(name, password)}>
-        <Text style={styles.btnText}>Login</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={{marginBottom: 10, marginRight: 20, marginLeft: 20}}>
+        <Button
+          contentStyle={{height: 40}}
+          color="skyblue"
+          mode="contained"
+          labelStyle={{fontSize: 20}}
+          onPress={() => checkEmpty(name, password)}>
+          Login
+        </Button>
+      </View>
+      <View style={{marginRight: 20, marginLeft: 20}}>
+        <Button
+          contentStyle={{height: 40}}
+          color="skyblue"
+          mode="contained"
+          labelStyle={{fontSize: 20}}
+          onPress={() => session(111, true)}>
+          Login as Guess
+        </Button>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
 export default LoginForm;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  btn: {
-    backgroundColor: '#c2bad8',
-    padding: 9,
-    width: '100%',
-  },
-  btnText: {
-    color: 'darkslateblue',
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  input: {
-    width: '80%',
-    borderWidth: 1,
-    borderColor: '#f2f2e1',
-    backgroundColor: '#eaeaea',
-    height: 50,
-    padding: 5,
-  },
-  btnDate: {
-    width: '50%',
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: 20,
-  },
-  inputText: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    width: '20%',
-  },
-});

@@ -1,15 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
   ScrollView,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import Collapsible from 'react-native-collapsible';
 import {CheckBox} from 'react-native-elements';
+import moment from 'moment';
+import {IconButton} from 'react-native-paper';
 
 const ListItem = ({
   item,
@@ -18,13 +17,24 @@ const ListItem = ({
   importantTodo,
   navigation,
 }) => {
-  const [collapsed, setcollapsed] = useState(true);
+  const checkItem = () => {
+    toggleTodo(item.id);
+  };
+
+  const editScreen = () => {
+    navigation.navigate('ItemEdit', {
+      itemId: item.id,
+      title: item.title,
+      description: item.description,
+      start: item.start,
+      end: item.end,
+    });
+  };
 
   return (
     <View>
       <ScrollView>
         <TouchableOpacity
-          onPress={() => setcollapsed(!collapsed)}
           style={[
             styles.listItem,
             {
@@ -42,7 +52,7 @@ const ListItem = ({
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
                 checked={item.completed}
-                onPress={() => toggleTodo(item.id)}
+                onPress={() => checkItem()}
               />
             </View>
             <Text
@@ -54,89 +64,53 @@ const ListItem = ({
               ]}>
               {item.title}
             </Text>
-            <View
-              style={{
-                right: 20,
-                height: '100%',
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Icon
-                size={50}
-                color="yellow"
-                name="exclamation"
-                onPress={() => importantTodo(item.id)}
-              />
-            </View>
-            <View
-              style={{
-                right: 15,
-                height: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Icon
-                size={50}
-                color="gray"
-                name="edit"
-                onPress={() =>
-                  navigation.navigate('ItemEdit', {
-                    itemId: item.id,
-                    title: item.title,
-                    description: item.description,
-                    start: item.start,
-                    end: item.end,
-                  })
-                }
-              />
-            </View>
-            <View
-              style={{
-                right: 0,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Icon
-                onPress={() => deleteTodo(item.id)}
-                name="remove"
-                size={50}
-                color="firebrick"
-              />
+
+            <IconButton
+              icon="alert-circle-outline"
+              color="yellow"
+              size={25}
+              onPress={() => importantTodo(item.id)}
+            />
+            <IconButton
+              icon="square-edit-outline"
+              color="gray"
+              size={25}
+              onPress={() => editScreen()}
+            />
+            <IconButton
+              icon="close"
+              color="red"
+              size={25}
+              onPress={() => deleteTodo(item.id)}
+            />
+          </View>
+          <View>
+            <Text style={{margin: 10, fontSize: 15}}>{item.description}</Text>
+            <View style={{flexDirection: 'row'}}>
+              <Text
+                style={{
+                  margin: 10,
+                  textAlign: 'center',
+                  textAlignVertical: 'center',
+                }}>
+                {moment.unix(item.start).format('DD-MM-YYYY')} -{' '}
+                {moment.unix(item.end).format('DD-MM-YYYY')}
+              </Text>
+              <Text
+                style={{
+                  margin: 10,
+                }}>
+                {item.completed
+                  ? 'Task Comepleted'
+                  : `Due ${moment(
+                      moment.unix(item.end).utc(),
+                    ).fromNow()} on ${moment(
+                      moment.unix(item.end).utc(),
+                    ).format('dddd')}`}
+              </Text>
             </View>
           </View>
         </TouchableOpacity>
-        <Collapsible collapsed={collapsed} align="center">
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: '#DCD9CD',
-              borderBottomColor: 'gray',
-              borderBottomWidth: 1,
-            }}>
-            <View>
-              <Text style={{margin: 10, fontSize: 20}}>{item.description}</Text>
-              <View style={{flexDirection: 'row'}}>
-                <Text
-                  style={{
-                    margin: 10,
-                    width: '50%',
-                    textAlign: 'center',
-                    textAlignVertical: 'center',
-                  }}>
-                  Start :{item.start}
-                </Text>
-                <Text
-                  style={{
-                    margin: 10,
-                    width: '50%',
-                  }}>
-                  End :{item.end}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </Collapsible>
       </ScrollView>
     </View>
   );
@@ -148,11 +122,19 @@ const styles = StyleSheet.create({
   },
   listItem: {
     flex: 1,
-    padding: 3,
-    backgroundColor: 'lightgray',
+    backgroundColor: '#e0e0e0',
     borderColor: '#eee',
     borderLeftWidth: 6,
-    marginTop: 2,
+    marginTop: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+
+    elevation: 4,
   },
   listItemView: {
     flexDirection: 'row',
@@ -160,27 +142,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listItemText: {
-    right: 30,
+    right: 20,
     alignItems: 'center',
     fontSize: 20,
-    width: 200,
+    width: '30%',
   },
   checkedItemText: {
     fontSize: 18,
     textDecorationLine: 'line-through',
     color: 'green',
   },
-  iconView: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    width: 70,
-  },
   editItemInput: {
     padding: 0,
     fontSize: 18,
-  },
-  date: {
-    flexDirection: 'row',
   },
 });
 

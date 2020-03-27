@@ -7,8 +7,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  // newLogin: (trueFalse, name, password) =>
-  //   dispatch(newLogin(trueFalse, name, password)),
   login: (userId, name, password) => dispatch(login(userId, name, password)),
   session: (userId, trueFalse) => dispatch(session(userId, trueFalse)),
 });
