@@ -62,7 +62,7 @@ const AddTodo = ({addTodo, navigation, sessions}) => {
 
   const checkEmpty = (title, description, start, end) => {
     if (title == '') return alert('title input is empty');
-    if (start >= end) {
+    if (start > end) {
       alert('End date must be greater than Start date');
     } else {
       addTodo(

@@ -64,7 +64,7 @@ const EditTodo = ({editTodo, route, navigation}) => {
   };
 
   const checkEmpty = (id, editTitle, editdDescription, start, end) => {
-    if (start >= end) {
+    if (start > end) {
       alert('End date must be greater than Start date');
     } else {
       if (editTitle === '' && editdDescription === '') {

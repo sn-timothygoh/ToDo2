@@ -96,19 +96,19 @@ const ListItem = ({
                 {moment.unix(item.start).format('DD-MM-YYYY')} -{' '}
                 {moment.unix(item.end).format('DD-MM-YYYY')}
               </Text>
-              <Text
-                style={{
-                  margin: 10,
-                }}>
-                {item.completed
-                  ? 'Task Comepleted'
-                  : `Due ${moment(
-                      moment.unix(item.end).utc(),
-                    ).fromNow()} on ${moment(
-                      moment.unix(item.end).utc(),
-                    ).format('dddd')}`}
-              </Text>
             </View>
+            <Text
+              style={{
+                margin: 10,
+              }}>
+              {item.completed
+                ? 'Task Comepleted'
+                : `Due ${moment(
+                    moment.unix(item.end).utc(),
+                  ).fromNow()} on ${moment(moment.unix(item.end).utc()).format(
+                    'dddd',
+                  )}`}
+            </Text>
           </View>
         </TouchableOpacity>
       </ScrollView>
